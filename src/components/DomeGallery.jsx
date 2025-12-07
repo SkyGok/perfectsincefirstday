@@ -88,6 +88,12 @@ function computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, segments) {
   return { rotateX, rotateY }
 }
 
+// Detect mobile device
+const isMobile = () => {
+  if (typeof window === 'undefined') return false
+  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
+
 export default function DomeGallery({
   items = [],
   fit = 0.5,
@@ -108,6 +114,17 @@ export default function DomeGallery({
   openedImageBorderRadius = '30px',
   grayscale = true
 }) {
+  // Reduce segments on mobile for better performance
+  const [isMobileDevice, setIsMobileDevice] = useState(false)
+  const effectiveSegments = isMobileDevice ? Math.max(20, Math.floor(segments * 0.6)) : segments
+  const effectiveDragSensitivity = isMobileDevice ? dragSensitivity * 1.5 : dragSensitivity
+
+  useEffect(() => {
+    setIsMobileDevice(isMobile())
+    const handleResize = () => setIsMobileDevice(isMobile())
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
   const rootRef = useRef(null)
   const mainRef = useRef(null)
   const sphereRef = useRef(null)
@@ -140,7 +157,7 @@ export default function DomeGallery({
     document.body.classList.remove('dg-scroll-lock')
   }, [selectedItem])
 
-  const galleryItems = useMemo(() => buildItems(items, segments), [items, segments])
+  const galleryItems = useMemo(() => buildItems(items, effectiveSegments), [items, effectiveSegments])
 
   const applyTransform = (xDeg, yDeg) => {
     const el = sphereRef.current
@@ -285,11 +302,11 @@ export default function DomeGallery({
         }
 
         const nextX = clamp(
-          startRotRef.current.x - dyTotal / dragSensitivity,
+          startRotRef.current.x - dyTotal / effectiveDragSensitivity,
           -maxVerticalRotationDeg,
           maxVerticalRotationDeg
         )
-        const nextY = startRotRef.current.y + dxTotal / dragSensitivity
+        const nextY = startRotRef.current.y + dxTotal / effectiveDragSensitivity
         const cur = rotationRef.current
         if (cur.x !== nextX || cur.y !== nextY) {
           rotationRef.current = { x: nextX, y: nextY }
@@ -386,8 +403,8 @@ export default function DomeGallery({
         ref={rootRef}
         className="dome-gallery-root"
         style={{
-          ['--segments-x']: segments,
-          ['--segments-y']: segments,
+          ['--segments-x']: effectiveSegments,
+          ['--segments-y']: effectiveSegments,
           ['--overlay-blur-color']: overlayBlurColor,
           ['--tile-radius']: imageBorderRadius,
           ['--enlarge-radius']: openedImageBorderRadius,
@@ -401,7 +418,7 @@ export default function DomeGallery({
           <div className="dome-gallery-stage">
             <div ref={sphereRef} className="dome-gallery-sphere">
               {galleryItems.map((it, i) => {
-                const baseRot = computeItemBaseRotation(it.x, it.y, it.sizeX, it.sizeY, segments)
+                const baseRot = computeItemBaseRotation(it.x, it.y, it.sizeX, it.sizeY, effectiveSegments)
                 return (
                   <div
                     key={`${it.x},${it.y},${i}`}
@@ -435,8 +452,12 @@ export default function DomeGallery({
                           src={it.src}
                           draggable={false}
                           alt={it.alt}
+                          loading="lazy"
+                          decoding="async"
                           style={{
-                            filter: grayscale ? 'grayscale(1)' : 'none'
+                            filter: grayscale ? 'grayscale(1)' : 'none',
+                            transform: 'translateZ(0)',
+                            willChange: 'transform'
                           }}
                         />
                       )}

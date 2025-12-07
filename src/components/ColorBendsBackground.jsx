@@ -1,11 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import '../styles/color-bends.css'
-
-// Detect mobile device
-const isMobile = () => {
-  if (typeof window === 'undefined') return false
-  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-}
 
 const ColorBendsBackground = ({ 
   colors = null,
@@ -16,11 +10,6 @@ const ColorBendsBackground = ({
   const canvasRef = useRef(null)
   const animationFrameRef = useRef(null)
   const timeRef = useRef(0)
-  const [isMobileDevice, setIsMobileDevice] = useState(false)
-  
-  // Reduce intensity and complexity on mobile
-  const effectiveIntensity = isMobileDevice ? intensity * 0.7 : intensity
-  const effectiveSpeed = isMobileDevice ? speed * 0.8 : speed
 
   // Default romantic color palette
   const defaultColors = [
@@ -33,13 +22,6 @@ const ColorBendsBackground = ({
   ]
 
   const colorPalette = colors || defaultColors
-
-  useEffect(() => {
-    setIsMobileDevice(isMobile())
-    const handleResize = () => setIsMobileDevice(isMobile())
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -57,14 +39,14 @@ const ColorBendsBackground = ({
     window.addEventListener('resize', resizeCanvas)
 
     const draw = () => {
-      timeRef.current += 0.01 * effectiveSpeed
+      timeRef.current += 0.01 * speed
       const time = timeRef.current
 
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Create gradient bends - reduce on mobile for performance
-      const numBends = isMobileDevice ? 2 : 3
+      // Create gradient bends
+      const numBends = 3
       for (let i = 0; i < numBends; i++) {
         const offset = (i / numBends) * Math.PI * 2
         const t = time + offset
@@ -83,7 +65,7 @@ const ColorBendsBackground = ({
           const g = Math.min(255, Math.max(0, color.g + Math.cos(t * 0.7 + index) * 20))
           const b = Math.min(255, Math.max(0, color.b + Math.sin(t * 0.6 + index) * 20))
           
-          gradient.addColorStop(animatedStop, `rgba(${r}, ${g}, ${b}, ${effectiveIntensity})`)
+          gradient.addColorStop(animatedStop, `rgba(${r}, ${g}, ${b}, ${intensity})`)
         })
 
         // Draw curved path
@@ -114,7 +96,7 @@ const ColorBendsBackground = ({
           const r = Math.min(255, Math.max(0, color.r + Math.sin(t + index) * 15))
           const g = Math.min(255, Math.max(0, color.g + Math.cos(t * 1.1 + index) * 15))
           const b = Math.min(255, Math.max(0, color.b + Math.sin(t * 0.9 + index) * 15))
-          pathGradient.addColorStop(stop, `rgba(${r}, ${g}, ${b}, ${effectiveIntensity * 0.8})`)
+          pathGradient.addColorStop(stop, `rgba(${r}, ${g}, ${b}, ${intensity * 0.8})`)
         })
         
         ctx.strokeStyle = pathGradient
@@ -142,7 +124,7 @@ const ColorBendsBackground = ({
         const color1 = colorPalette[i % colorPalette.length]
         const color2 = colorPalette[(i + 1) % colorPalette.length]
         
-        radialGradient.addColorStop(0, `rgba(${color1.r}, ${color1.g}, ${color1.b}, ${effectiveIntensity * 0.4})`)
+        radialGradient.addColorStop(0, `rgba(${color1.r}, ${color1.g}, ${color1.b}, ${intensity * 0.4})`)
         radialGradient.addColorStop(1, `rgba(${color2.r}, ${color2.g}, ${color2.b}, 0)`)
         
         ctx.fillStyle = radialGradient
@@ -160,7 +142,7 @@ const ColorBendsBackground = ({
         cancelAnimationFrame(animationId)
       }
     }
-  }, [colorPalette, effectiveIntensity, effectiveSpeed, isMobileDevice])
+  }, [colorPalette, intensity, speed])
 
   return (
     <canvas

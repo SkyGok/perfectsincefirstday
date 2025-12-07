@@ -2,11 +2,13 @@ import { useState, useRef, useEffect } from 'react'
 import '../styles/background-music.css'
 
 const BackgroundMusic = ({ 
-  src = '/media/background-music.mp3',
+  src,
   autoPlay = false,
   loop = true,
   volume = 0.5
 }) => {
+  // Use provided src or default with base URL
+  const audioSrc = src || `${import.meta.env.BASE_URL}media/background-music.mp3`
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [showControls, setShowControls] = useState(true)
@@ -112,7 +114,7 @@ const BackgroundMusic = ({
     <>
       <audio
         ref={audioRef}
-        src={src}
+        src={audioSrc}
         loop={loop}
         preload="auto"
       />

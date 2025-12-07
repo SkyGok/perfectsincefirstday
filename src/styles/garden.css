@@ -1,0 +1,89 @@
+.garden {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flower-position {
+  position: absolute;
+  --total-flowers: 7;
+  --angle: calc(var(--flower-index) * (360deg / var(--total-flowers)) - 90deg);
+  --radius: 280px;
+  transform: 
+    rotate(var(--angle)) 
+    translateX(var(--radius)) 
+    rotate(calc(-1 * var(--angle)));
+  transform-origin: center;
+}
+
+/* Tablet and smaller desktop */
+@media (max-width: 1024px) {
+  .garden {
+    max-width: 700px;
+    height: 700px;
+    padding: 18px;
+  }
+
+  .flower-position {
+    --radius: 240px;
+  }
+}
+
+/* Mobile landscape and small tablets */
+@media (max-width: 768px) {
+  .garden {
+    max-width: 600px;
+    height: 600px;
+    padding: 15px;
+  }
+
+  .flower-position {
+    --radius: 200px;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+  .garden {
+    max-width: 500px;
+    height: 500px;
+    padding: 12px;
+  }
+
+  .flower-position {
+    --radius: 170px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+  .garden {
+    max-width: 400px;
+    height: 400px;
+    padding: 10px;
+  }
+
+  .flower-position {
+    --radius: 140px;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .garden {
+    max-width: 450px;
+    height: 450px;
+    padding: 8px;
+  }
+
+  .flower-position {
+    --radius: 150px;
+  }
+}
+

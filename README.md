@@ -1,80 +1,90 @@
-# 🌹 Blooming Garden of Love 🌹
+# 💕 Romantic Gallery Website
 
-A romantic React website featuring interactive blooming flowers with smooth animations.
+A beautiful, interactive 3D dome gallery website built with React, featuring romantic memories, smooth animations, and background music.
 
-## Features
+## ✨ Features
 
-- ✨ Beautiful blooming flower animations using Framer Motion
-- 💕 Custom romantic messages revealed when flowers bloom
-- 🎨 Soft, romantic styling with hover effects
-- 📱 Fully responsive grid layout
-- 🌸 Toggle bloom state with smooth transitions
+- **3D Dome Gallery**: Interactive rotatable dome displaying your memories
+- **Blur Text Animation**: Beautiful animated intro message
+- **Background Music**: Ambient music that plays throughout the experience
+- **Color Bends Background**: Dynamic animated background
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Romantic Notes**: Click on any image to see a personalized note
 
-## Getting Started
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
 
 ### Installation
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### Development
-
-```bash
+# Start development server
 npm run dev
-```
 
-### Build
-
-```bash
+# Build for production
 npm run build
+
+# Preview production build
+npm run preview
 ```
 
-## Customization
+## 📁 Project Structure
 
-### Adding Your Own Images
+```
+├── public/
+│   └── media/          # Images and audio files
+├── src/
+│   ├── components/     # React components
+│   ├── styles/         # CSS files
+│   └── App.jsx         # Main app component
+└── .github/
+    └── workflows/      # GitHub Actions for deployment
+```
 
-1. Place your images in the `public` folder (e.g., `public/images/`)
-2. Update the `Garden.jsx` file to use your image paths:
+## 🎨 Customization
+
+### Adding Images
+
+1. Add your images to `/public/media/`
+2. Update the `galleryItems` array in `src/App.jsx`
+3. Add your romantic notes for each image
+
+### Changing the Intro Message
+
+Edit the `text` prop in `BlurText` component in `src/App.jsx`:
 
 ```jsx
-const flower = {
-  imageClosed: '/images/closed-bud-1.jpg',
-  imageOpen: '/images/open-flower-1.jpg',
-  message: "Your custom message here 💕"
-}
+<BlurText
+  text="Your custom message here"
+  ...
+/>
 ```
 
-### Customizing Messages
+### Background Music
 
-Edit the `flowers` array in `Garden.jsx` to change the messages for each flower.
+1. Add your audio file to `/public/media/background-music.mp3`
+2. Or update the `src` path in the `BackgroundMusic` component
 
-### Styling
+## 📦 Deployment
 
-- `src/styles/flower.css` - Individual flower styling
-- `src/styles/garden.css` - Grid layout styling
-- `src/styles/index.css` - Global styles
+This project is configured for GitHub Pages deployment. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
-## Project Structure
+## 🛠️ Built With
 
-```
-src/
-├── components/
-│   ├── BloomingFlower.jsx  # Main flower component
-│   └── Garden.jsx          # Grid layout with multiple flowers
-├── styles/
-│   ├── flower.css          # Flower component styles
-│   ├── garden.css          # Garden grid styles
-│   └── index.css           # Global styles
-├── App.jsx
-└── main.jsx
-```
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [@use-gesture/react](https://use-gesture.netlify.app/)
 
-## Technologies
+## 📝 License
 
-- React 18
-- Vite
-- Framer Motion
+This project is private and personal.
 
-Enjoy creating your romantic garden! 💐
+## 💝 Made with Love
 
+Created as a special gift for someone special.
